@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wyniki_part_${{ matrix.job-index }}
-          path: wyniki/wyniki_part_${{ matrix.job-index + 1 }}.csv
+          path: wyniki/wyniki_part_${{ matrix.job-index }}.csv
 
   merge:
     needs: scrape
@@ -45,8 +45,8 @@ jobs:
         with:
           path: wyniki
 
-      - name: Install requests
-        run: pip install requests
+      - name: Install pandas
+        run: pip install pandas
 
       - name: Merge results
         run: python scraper.py --merge
