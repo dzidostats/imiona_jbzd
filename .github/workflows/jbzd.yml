@@ -10,10 +10,10 @@ jobs:
       matrix:
         job-index: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -23,22 +23,36 @@ jobs:
       - name: Run scraper job
         run: python scraper.py ${{ matrix.job-index }}
 
+      - name: Upload partial results
+        uses: actions/upload-artifact@v4
+        with:
+          name: wyniki_part_${{ matrix.job-index }}
+          path: wyniki/wyniki_part_${{ matrix.job-index + 1 }}.csv
+
   merge:
     needs: scrape
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Download all partial results
+        uses: actions/download-artifact@v4
+        with:
+          path: wyniki
+
+      - name: Install requests
+        run: pip install requests
 
       - name: Merge results
         run: python scraper.py --merge
 
       - name: Upload final CSV
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wyniki_final
           path: wyniki_final.csv
