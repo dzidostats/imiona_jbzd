@@ -46,7 +46,7 @@ jobs:
           path: wyniki
 
       - name: Install pandas
-        run: pip install pandas
+        run: pip install pandas requests
 
       - name: Merge results
         run: python scraper.py --merge
